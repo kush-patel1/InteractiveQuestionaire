@@ -1,38 +1,83 @@
-.App {
+.kahoot-container {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  padding: 30px 20px;
+  background: linear-gradient(180deg, #fdfbfb, #ebedee);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+.App-header {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 40px;
+}
+
+/* === Options Grid (2x2) === */ .options-grid { display: grid; grid-template-columns: repeat(2, minmax(520px, 620px)); gap: 20px; justify-content: center; margin-bottom: 2.5rem; }
+
+.Option {
+  border-radius: 20px;
+  padding: 50px 30px;
+  font-size: 1.4rem;
+  font-weight: 600;
   color: white;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  transition: all 0.25s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 160px;
 }
 
-.App-link {
-  color: #61dafb;
+.Option1 { background-color: #f87171; } /* Red */
+.Option2 { background-color: #60a5fa; } /* Blue */
+.Option3 { background-color: #34d399; } /* Green */
+.Option4 { background-color: #fbbf24; } /* Yellow */
+
+.Option:hover {
+  transform: scale(1.07);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.Option:active {
+  transform: scale(0.97);
+}
+
+/* Chart Section */
+.results-section {
+  width: 90%;
+  max-width: 700px;
+}
+
+.chart-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.chart-container {
+  width: 100%;
+  height: 300px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 800px) {
+  .options-grid {
+    grid-template-columns: 1fr;
   }
-  to {
-    transform: rotate(360deg);
+
+  .Option {
+    font-size: 1.2rem;
+    min-height: 140px;
+    padding: 40px 20px;
+  }
+
+  .App-header {
+    font-size: 1.6rem;
   }
 }

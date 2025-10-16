@@ -1,53 +1,103 @@
-import React, { useState } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { Button, Form } from 'react-bootstrap';
+import React, { useState } from "react";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  ChartOptions,
+} from "chart.js";
+import "./App.css";
 
-//local storage and API Key: key should be entered in by the user and will be stored in local storage (NOT session storage)
-let keyData = "";
-const saveKeyData = "MYKEY";
-const prevKey = localStorage.getItem(saveKeyData); //so it'll look like: MYKEY: <api_key_value here> in the local storage when you inspect
-if (prevKey !== null) {
-  keyData = JSON.parse(prevKey);
-}
+ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-function App() {
-  const [key, setKey] = useState<string>(keyData); //for api key input
-  
-  //sets the local storage item to the api key the user inputed
-  function handleSubmit() {
-    localStorage.setItem(saveKeyData, JSON.stringify(key));
-    window.location.reload(); //when making a mistake and changing the key again, I found that I have to reload the whole site before openai refreshes what it has stores for the local storage variable
-  }
+export default function App() {
+  const [counts, setCounts] = useState<number[]>([0, 0, 0, 0]);
 
-  //whenever there's a change it'll store the api key in a local state called key but it won't be set in the local storage until the user clicks the submit button
-  function changeKey(event: React.ChangeEvent<HTMLInputElement>) {
-    setKey(event.target.value);
-  }
+  const optionsList = [
+    "We will eat dinner as a family.",
+    "We will engage in at least one activity as a family every day.",
+    "We will sit together to share stories or memories as a family.",
+    "We will gather together for family discussions or games.",
+  ];
+
+  const handleClick = (index: number) => {
+    const newCounts = [...counts];
+    newCounts[index] += 1;
+    setCounts(newCounts);
+  };
+
+  const data = {
+    labels: ["Option 1", "Option 2", "Option 3", "Option 4"],
+    datasets: [
+      {
+        label: "Responses",
+        data: counts,
+        backgroundColor: ["#f87171", "#60a5fa", "#34d399", "#fbbf24"],
+        borderRadius: 10,
+      },
+    ],
+  };
+
+  const chartOptions: ChartOptions<"bar"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: "#333",
+        titleFont: {
+          size: 14,
+          weight: "bold",
+        },
+        bodyFont: {
+          size: 13,
+        },
+        padding: 10,
+        cornerRadius: 6,
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: { stepSize: 1, color: "#444", font: { size: 14 } },
+      },
+      x: {
+        ticks: { color: "#444", font: { size: 14 } },
+      },
+    },
+    animation: {
+      duration: 800,
+      easing: "easeOutQuart",
+    },
+  };
+
   return (
-    <div className="App">
+    <div className="kahoot-container">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        What will you as a family do to unite amongst yourselves?
       </header>
-      <Form>
-        <Form.Label>API Key:</Form.Label>
-        <Form.Control type="password" placeholder="Insert API Key Here" onChange={changeKey}></Form.Control>
-        <br></br>
-        <Button className="Submit-Button" onClick={handleSubmit}>Submit</Button>
-      </Form>
+
+      <div className="options-grid">
+        {optionsList.map((opt, i) => (
+          <div
+            key={i}
+            className={`Option Option${i + 1}`}
+            onClick={() => handleClick(i)}
+          >
+            {opt}
+          </div>
+        ))}
+      </div>
+
+      <div className="results-section">
+        <h3 className="chart-title">Live Response Results</h3>
+        <div className="chart-container">
+          <Bar data={data} options={chartOptions} />
+        </div>
+      </div>
     </div>
   );
 }
-
-export default App;
